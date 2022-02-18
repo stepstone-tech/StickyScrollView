@@ -5,9 +5,9 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'weekend.coder'
-                artifactId = 'sticky-scrollview'
-                version = '1.0.4'
+                groupId = 'com.github.amarjain07'
+                artifactId = 'StickyScrollView'
+                version = '1.0.3.1-Kotlin1.4.31'
             }
         }
     }

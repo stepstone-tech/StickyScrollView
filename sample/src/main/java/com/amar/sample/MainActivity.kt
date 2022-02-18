@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
         findViewById<View>(R.id.buy).setOnClickListener(this)
         findViewById<View>(R.id.save).setOnClickListener(this)
-        findViewById<View>(R.id.title).setOnClickListener(this)
+        findViewById<View>(R.id.title_child).setOnClickListener(this)
         findViewById<View>(R.id.other_product).setOnClickListener(this)
         mainShoeView = findViewById(R.id.main_shoe_picture)
         scrollView?.setFooterView(R.id.buttons)
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 if (scrollView!!.isFooterSticky) "Footer is Sticky" else "Footer is not sticky",
                 Toast.LENGTH_SHORT
             ).show()
-            R.id.title -> Toast.makeText(
+            R.id.title_child -> Toast.makeText(
                 this,
                 if (scrollView!!.isHeaderSticky) "Header is Sticky" else "Header is not sticky",
                 Toast.LENGTH_SHORT

@@ -47,7 +47,7 @@ class StickyScrollView @JvmOverloads constructor(
             mStickyScrollPresenter.recomputeFooterLocation(getFooterTop())
         }
         stickyHeaderView?.let {
-            mStickyScrollPresenter.recomputeHeaderLocation(it.top)
+            mStickyScrollPresenter.recomputeHeaderLocation(getRelativeHeaderTop(it))
         }
     }
 
@@ -99,32 +99,42 @@ class StickyScrollView @JvmOverloads constructor(
         this.scrollViewListener = scrollViewListener
     }
 
-    private fun initialiseHeader(){
-        mStickyScrollPresenter.initStickyHeader(stickyHeaderView?.top)
+    private fun initialiseHeader() {
+        stickyHeaderView?.let {
+            mStickyScrollPresenter.initStickyHeader(getRelativeHeaderTop(it))
+        }
     }
 
-    private fun initialiseFooter(){
+    private fun initialiseFooter() {
         mStickyScrollPresenter.initStickyFooter(
             stickyFooterView?.measuredHeight,
             getFooterTop()
         )
     }
 
-    private fun getRelativeTop(myView: View): Int {
+    private fun getRelativeHeaderTop(myView: View): Int {
+        return if (myView.parent === this) {
+            myView.top
+        } else {
+            myView.top + getRelativeHeaderTop(myView.parent as View)
+        }
+    }
+
+    private fun getRelativeFooterTop(myView: View): Int {
         return if (myView.parent === myView.rootView) {
             myView.top
         } else {
-            myView.top + getRelativeTop(myView.parent as View)
+            myView.top + getRelativeFooterTop(myView.parent as View)
         }
     }
 
     private fun getFooterTop(): Int {
         return stickyFooterView?.let {
-            return getRelativeTop(it) - it.topCutOutHeight()
+            return getRelativeFooterTop(it) - it.topCutOutHeight()
         } ?: 0
     }
 
-    private inner class StickyScrollPresentation: IStickyScrollPresentation {
+    private inner class StickyScrollPresentation : IStickyScrollPresentation {
         override val currentScrollYPos: Int
             get() = scrollY
 
@@ -143,6 +153,7 @@ class StickyScrollView @JvmOverloads constructor(
             stickyHeaderView?.let {
                 it.translationY = translationY.toFloat()
                 PropertySetter.setTranslationZ(it, 1f)
+                PropertySetter.setTranslationZ(it.parent as View, 1f)
             }
         }
 
